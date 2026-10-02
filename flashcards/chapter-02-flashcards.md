@@ -1,0 +1,16 @@
+## Chapter 2: Selecting Transformation Tools and Designing for Governance — Flashcards
+
+| # | Front (Question) | Back (Answer) |
+|---|-----------------|---------------|
+| 1 | Dataflow vs Dataproc: when to pick which? | Dataflow = serverless, unified batch+streaming via Apache Beam, no cluster management. Dataproc = managed Hadoop/Spark clusters, best for lift-and-shift of existing Hadoop/Spark code. Exam tip: 'migrate existing Spark jobs unchanged' → Dataproc; 'new pipeline, streaming+batch, no ops' → Dataflow. |
+| 2 | Data Fusion vs Dataform — core difference? | Data Fusion = visual, no-code/low-code ETL (CDAP-based) for building pipelines with pre-built connectors, runs on Dataproc under the hood. Dataform = SQL-based ELT transformation tool inside BigQuery with Git version control and dependency graphs, no separate compute. |
+| 3 | Apache Beam core abstractions | Pipeline (the whole job), PCollection (immutable distributed dataset), PTransform (operation on PCollections, e.g. ParDo, GroupByKey). Exam tests: PCollections are immutable — every transform produces a new one. |
+| 4 | Apache Beam windowing types | Fixed (tumbling): equal non-overlapping intervals. Sliding: overlapping windows (size + period). Session: gap-based, groups by activity with idle-time gap. Global: single window for all data (default for batch). |
+| 5 | Dataplex core hierarchy | Lake → Zone → Asset. A Lake = logical grouping (e.g. by domain/business unit). Zones = Raw or Curated, define expected data quality/format. Assets = actual BigQuery datasets or GCS buckets registered under a zone. |
+| 6 | Which service auto-generates data lineage across BigQuery, Dataproc, and Dataflow jobs? | Dataplex — it captures lineage automatically from supported processing jobs and displays it in the lineage graph, part of unified governance. |
+| 7 | Data Fusion editions | Basic (single pipeline execution, no versioning), Enterprise (HA, pipeline versioning, higher SLA), Developer (for dev/test, lower cost, no HA). Exam tip: production workloads with SLA/versioning needs → Enterprise. |
+| 8 | Dataform key artifact file type | SQLX files — SQL enhanced with dependency declarations (ref()), config blocks (type: table/view/incremental), and assertions. Compiled into a DAG of BigQuery SQL statements. |
+| 9 | Dataproc autoscaling — what does it scale based on? | YARN pending memory metric, adjusting the number of secondary (preemptible or standard) worker nodes between configured min/max bounds. Primary workers are not autoscaled. |
+| 10 | Data mesh: 4 core principles | 1) Domain-oriented decentralized ownership, 2) Data as a product, 3) Self-serve data infrastructure platform, 4) Federated computational governance. On GCP: Dataplex lakes/zones model domains with centralized policy enforcement. |
+| 11 | gcloud command to create a Dataproc cluster with autoscaling policy attached | `gcloud dataproc clusters create my-cluster --autoscaling-policy=my-policy --region=us-central1` — the policy itself is created first via `gcloud dataproc autoscaling-policies import`. |
+| 12 | Dataform vs Dataflow — which handles streaming data? | Dataflow — built on Apache Beam, natively supports unbounded streaming with windowing/triggers. Dataform only orchestrates scheduled batch SQL transformations inside BigQuery; it has no streaming capability. |

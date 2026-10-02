@@ -1,0 +1,16 @@
+## Chapter 7: Bigtable, Spanner, Cloud SQL, and Cloud Storage — Flashcards
+
+| # | Front (Question) | Back (Answer) |
+|---|-----------------|---------------|
+| 1 | Bigtable hotspotting: what row key pattern causes it? | Monotonically increasing keys (auto-increment IDs, raw timestamps) as the leading key component — all writes hit the same tablet. Exam tip: fix with salting/hashing prefix or reversing the timestamp. |
+| 2 | Bigtable max cell value size / max row size? | Individual cell values up to 100MB; total row size up to 256MB. Exam tip: exceeding these is a common 'why not' answer for storing large blobs directly in Bigtable. |
+| 3 | Spanner multi-region vs regional SLA? | Multi-region: 99.999% availability. Regional: 99.99%. Exam tip: the extra 9 is the key differentiator tested for global vs regional Spanner configs. |
+| 4 | Spanner processing units to node conversion? | 1 node = 1000 processing units (PU). Minimum allocation = 100 PU. Exam tip: PUs let you provision in smaller increments than a full node. |
+| 5 | GCS Nearline vs Coldline vs Archive: minimum storage duration? | Nearline: 30 days. Coldline: 90 days. Archive: 365 days. Exam tip: early deletion before the minimum incurs a pro-rated early deletion charge. |
+| 6 | GCS storage class selection rule of thumb (access frequency)? | Standard: frequent/hot access. Nearline: ~once a month. Coldline: ~once a quarter. Archive: less than once a year. Exam tip: match access frequency, not just retention length. |
+| 7 | Bigtable vs Spanner: SQL and transactions? | Bigtable: no SQL, single-row atomicity only. Spanner: full SQL, multi-row/multi-table ACID transactions with external strong consistency. Exam tip: 'needs SQL joins + strong consistency' → Spanner; 'needs raw throughput + simple key lookups' → Bigtable. |
+| 8 | Cloud SQL vs Spanner: when to choose which? | Cloud SQL: single-region, vertical scaling, traditional MySQL/PostgreSQL/SQL Server workloads, lower cost/simplicity. Spanner: horizontal scaling, global distribution, petabyte scale, needs strong consistency across regions. Exam tip: 'global' or 'unlimited scale' keyword → Spanner. |
+| 9 | Bigtable row key design best practice for time-series data? | Use deviceID/entity as prefix (hashed or reversed if needed) with reverse timestamp as suffix to support recent-first range scans while distributing writes across tablets. Exam tip: never put raw ascending timestamp first. |
+| 10 | GCS lifecycle rule requirement for deletion? | A Delete action requires its own explicit lifecycle rule with matching conditions (e.g., Age). Objects will NOT auto-delete just because they transitioned storage class. Exam tip: incomplete lifecycle config = objects stuck in a tier forever. |
+| 11 | Bigtable cluster replication consistency? | Multi-cluster routing provides eventual consistency across clusters; single-cluster reads/writes are strongly consistent. Exam tip: don't confuse Bigtable's cross-cluster eventual consistency with Spanner's global strong consistency. |
+| 12 | Cloud SQL max storage capacity per instance? | Up to 64TB per instance. Exam tip: beyond this scale, or when horizontal write scaling is needed, the answer shifts to Spanner. |
